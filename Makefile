@@ -3,82 +3,103 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: acarlott <acarlott@student.42lyon.fr>      +#+  +:+       +#+         #
+#    By: acarlott <acarlott@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/14 23:11:22 by acarlott          #+#    #+#              #
-#    Updated: 2023/03/09 11:20:28 by acarlott         ###   ########lyon.fr    #
+#    Updated: 2025/01/16 17:49:31 by acarlott         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = libft.a
 
 CFLAGS = -Wall -Werror -Wextra
-CC = cc
+CC = gcc
 HEADER = ./include
 AR = ar rcs
+OBJS_DIR = .objs/libft/
 
-SRCS_LIB =	lib_core/ft_atoi.c \
-		lib_core/ft_itoa.c \
-		lib_core/ft_split.c \
-		lib_core/ft_bzero.c \
-		lib_core/ft_memset.c \
-		lib_core/ft_memcmp.c \
-		lib_core/ft_memchr.c \
-		lib_core/ft_memcpy.c \
-		lib_core/ft_strchr.c \
-		lib_core/ft_calloc.c \
-		lib_core/ft_strlen.c \
-		lib_core/ft_strdup.c \
-		lib_core/ft_substr.c \
-		lib_core/ft_isalnum.c \
-		lib_core/ft_isalpha.c \
-		lib_core/ft_isascii.c \
-		lib_core/ft_isdigit.c \
-		lib_core/ft_isprint.c \
-		lib_core/ft_strlcat.c \
-		lib_core/ft_strjoin.c \
-		lib_core/ft_strlcpy.c \
-		lib_core/ft_strmapi.c \
-		lib_core/ft_strncmp.c \
-		lib_core/ft_strrchr.c \
-		lib_core/ft_strnstr.c \
-		lib_core/ft_tolower.c \
-		lib_core/ft_strtrim.c \
-		lib_core/ft_toupper.c \
-		lib_core/ft_memmove.c \
-		lib_core/ft_striteri.c \
-		lib_core/ft_putstr_fd.c \
-		lib_core/ft_putnbr_fd.c \
-		lib_core/ft_putchar_fd.c \
-		lib_core/ft_putendl_fd.c \
-		lib_core/ft_lstnew.c \
-		lib_core/ft_lstadd_front.c \
-		lib_core/ft_lstsize.c \
-		lib_core/ft_lstlast.c \
-		lib_core/ft_lstadd_back.c \
-		lib_core/ft_lstdelone.c \
-		lib_core/ft_lstclear.c \
-		lib_core/ft_lstiter.c \
-		lib_core/ft_lstmap.c\
+SRCS =	ft_atoi.c \
+		ft_itoa.c \
+		ft_split.c \
+		ft_bzero.c \
+		ft_memset.c \
+		ft_memcmp.c \
+		ft_memchr.c \
+		ft_memcpy.c \
+		ft_strchr.c \
+		ft_calloc.c \
+		ft_strlen.c \
+		ft_strdup.c \
+		ft_substr.c \
+		ft_isalnum.c \
+		ft_isalpha.c \
+		ft_isascii.c \
+		ft_isdigit.c \
+		ft_isprint.c \
+		ft_strlcat.c \
+		ft_strjoin.c \
+		ft_strlcpy.c \
+		ft_strmapi.c \
+		ft_strncmp.c \
+		ft_strrchr.c \
+		ft_strnstr.c \
+		ft_tolower.c \
+		ft_strtrim.c \
+		ft_toupper.c \
+		ft_memmove.c \
+		ft_striteri.c \
+		ft_putstr_fd.c \
+		ft_putnbr_fd.c \
+		ft_putchar_fd.c \
+		ft_putendl_fd.c \
+		ft_lstnew.c \
+		ft_lstadd_front.c \
+		ft_lstsize.c \
+		ft_lstlast.c \
+		ft_lstadd_back.c \
+		ft_lstdelone.c \
+		ft_lstclear.c \
+		ft_lstiter.c \
+		ft_lstmap.c\
+		ft_check_convert.c \
+		ft_putstr.c \
+		ft_printf.c \
+		ft_putchar.c \
+		ft_putnbr_int.c \
+		ft_putnbr_base.c \
+		ft_print_memory.c \
+		ft_putnbr_unsigned.c
 
-OBJS = ${SRCS_LIB:.c=.o}
 
-./lib_core/%.o:	./lib_core/%.c	${HEADER}/libft.h
-	${CC} ${CFLAGS} -I${HEADER} -g -c $< -o $@ 
+OBJS = $(addprefix $(OBJS_DIR), $(SRCS:.c=.o))
 
-all: ${NAME}
+$(OBJS_DIR)%.o: %.c | $(OBJS_DIR)
+	${CC} ${CFLAGS} -I ${HEADER} -MMD -c $< -o $@ 
 
-${NAME}: ${OBJS}
-	${AR} ${NAME} ${OBJS}
+
+all: $(NAME)
+
+$(NAME): $(OBJS)
+	echo "\033[1;34m-> Creating.."
+	$(AR) $(NAME) $(OBJS)
+	echo "\033[1;32m-> Success !\033[1;33m libft created"
 
 clean:
-	$(RM) $(OBJS)
+	echo "\033[1;31m-> Cleaning All objects.."
+	rm -rf .objs
 
 fclean: clean
-	$(RM) $(NAME)
+	echo "\033[1;31m-> Cleaning Executable.."
+	rm -f $(NAME)
 
 re: fclean all
 
-# .SILENT:
+# Create object directory if necessary
+$(OBJS_DIR):
+	mkdir -p $(OBJS_DIR)
 
-.PHONY: all clean fclean re bonus
+-include $(OBJS:.o=.d)
+
+.SILENT:
+
+.PHONY: all clean fclean re
